@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  api:
+    container_name: strapi
+    env_file: .env
+    build:
+      context: api/
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      APP_KEYS: ${APP_KEYS}
+    volumes:
+      - ./api/config:/opt/app/config
+      - ./api/src:/opt/app/src
+      - ./api/package.json:/opt/app/package.json
+      - ./api/yarn.lock:/opt/app/yarn.lock
+      - ./api/.env:/opt/app/.env
+      - ./uploads:/opt/app/public/uploads/
+    ports:
+      - "1337:1337"
+    depends_on:
+      - strapiDB
+
+  strapiDB:
+    container_name: strapiDB
+    image: postgres:15.3-alpine
+    restart: always
+    env_file: .env
+    volumes:
+      - ./data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
