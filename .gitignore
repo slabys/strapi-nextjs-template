@@ -89,6 +89,7 @@ public/uploads/*
 # Custom
 ############################
 
+node_modules
 data/
 uploads/
 .env
