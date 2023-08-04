@@ -28,10 +28,10 @@ services:
     ports:
       - "1337:1337"
     depends_on:
-      - strapiDB
+      - database
 
-  strapiDB:
-    container_name: strapiDB
+  database:
+    container_name: postgresDB
     image: postgres:15.3-alpine
     restart: always
     env_file: .env
